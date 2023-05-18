@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">ToDoList</string>
     <string name="edit_hint">Adicione uma nova tarefa</string>
+    <string name="tasks_created">Criadas</string>
+    <string name="tasks_created_value">0</string>
+    <string name="completed_tasks">Concluídas</string>
+    <string name="completed_tasks_value">0</string>
 </resources>
