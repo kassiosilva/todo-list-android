@@ -5,4 +5,8 @@
     <string name="tasks_created_value">0</string>
     <string name="completed_tasks">Concluídas</string>
     <string name="completed_tasks_value">0</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="empty_list_title">Você ainda não tem tarefas cadastradas</string>
+    <string name="empty_list_subtitle">Crie tarefas e organize seus itens a fazer</string>
 </resources>
