@@ -23,7 +23,7 @@
         android:textSize="14sp" />
 
     <ImageButton
-        android:background="@android:color/transparent"
+        android:backgroundTint="@android:color/transparent"
         android:paddingVertical="9dp"
         android:paddingHorizontal="10dp"
         android:id="@+id/image_button_delete"
