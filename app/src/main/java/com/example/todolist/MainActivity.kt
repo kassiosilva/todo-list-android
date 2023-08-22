@@ -29,8 +29,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View) {
-        if (view.id == R.id.image_button_add) {
-            handleAddTask()
+        when (view.id) {
+            R.id.image_button_add -> handleAddTask()
         }
     }
 
@@ -66,6 +66,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         adapter.notifyDataSetChanged()
     }
 
+    private fun handleRemove(item: TaskBinding, position: Int) {
+        tasks.removeAt(position)
+        adapter.notifyItemRemoved(position)
+    }
+
     private inner class TasksAdapter(
         private val tasks: List<Task>
     ) : RecyclerView.Adapter<TasksAdapter.TaskViewHolder>() {
@@ -89,6 +94,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             fun bind(task: Task) {
                 bind.checkboxTask.text = task.description
                 bind.checkboxTask.isChecked = task.isCompleted
+
+                bind.imageButtonDelete.setOnClickListener {
+                    handleRemove(bind, adapterPosition)
+                }
             }
         }
     }
