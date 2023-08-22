@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.databinding.ActivityMainBinding
@@ -13,6 +15,7 @@ import com.example.todolist.model.Task
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var adapter: TasksAdapter
     private val tasks = mutableListOf<Task>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +30,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View) {
         if (view.id == R.id.image_button_add) {
-            // handleAddTask()
+            handleAddTask()
         }
     }
 
@@ -36,14 +39,31 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun handleList() {
+        adapter = TasksAdapter(tasks)
+
         binding.recyclerTasks.layoutManager = LinearLayoutManager(this)
-        binding.recyclerTasks.adapter = TasksAdapter(tasks)
+        binding.recyclerTasks.adapter = adapter
 
 
         // Lista vazia
         // adapter.updatedTasks(items)
         // val emptyObserver = EmptyObserver(binding.recyclerTasks, binding.emptyContainer.root)
         // adapter.registerAdapterDataObserver(emptyObserver)
+    }
+
+    private fun handleAddTask() {
+        val description = binding.editNewTask.text.toString()
+
+        if (description.isEmpty()) {
+            Toast.makeText(this, "Preencha o campo", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val task = Task(description)
+
+        tasks.add(task)
+
+        adapter.notifyDataSetChanged()
     }
 
     private inner class TasksAdapter(
@@ -56,17 +76,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         override fun getItemCount(): Int {
-            return 60
+            return tasks.size
         }
 
         override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-            //val task = tasks[position]
-            //holder.bind(task)
+            val task = tasks[position]
+            holder.bind(task)
         }
 
-        inner class TaskViewHolder(private val bind: TaskBinding) : RecyclerView.ViewHolder(bind.root) {
+        inner class TaskViewHolder(private val bind: TaskBinding) :
+            RecyclerView.ViewHolder(bind.root) {
             fun bind(task: Task) {
                 bind.checkboxTask.text = task.description
+                bind.checkboxTask.isChecked = task.isCompleted
             }
         }
     }
