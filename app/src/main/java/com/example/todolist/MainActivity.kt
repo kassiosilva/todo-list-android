@@ -28,6 +28,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         listeners()
     }
 
+    override fun onResume() {
+        super.onResume()
+        //binding.textTasksCreatedValue.text = tasks.size.toString()
+    }
+
     override fun onClick(view: View) {
         when (view.id) {
             R.id.image_button_add -> handleAddTask()
@@ -62,13 +67,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val task = Task(description)
 
         tasks.add(task)
-
         adapter.notifyDataSetChanged()
+
+        binding.textTasksCreatedValue.text = tasks.size.toString()
     }
 
     private fun handleRemove(item: TaskBinding, position: Int) {
         tasks.removeAt(position)
         adapter.notifyItemRemoved(position)
+
+        binding.textTasksCreatedValue.text = tasks.size.toString()
     }
 
     private inner class TasksAdapter(
