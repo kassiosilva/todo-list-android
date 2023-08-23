@@ -28,11 +28,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         listeners()
     }
 
-    override fun onResume() {
-        super.onResume()
-        //binding.textTasksCreatedValue.text = tasks.size.toString()
-    }
-
     override fun onClick(view: View) {
         when (view.id) {
             R.id.image_button_add -> handleAddTask()
