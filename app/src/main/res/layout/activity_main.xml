@@ -37,6 +37,7 @@
             android:background="@drawable/rounded_corner_edit"
             android:fontFamily="@font/inter"
             android:hint="@string/edit_hint"
+            android:imeOptions="actionDone"
             android:inputType="text"
             android:padding="16dp"
             android:textColor="@color/gray_100"

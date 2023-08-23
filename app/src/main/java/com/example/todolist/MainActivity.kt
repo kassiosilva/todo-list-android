@@ -1,12 +1,14 @@
 package com.example.todolist
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.databinding.ActivityMainBinding
@@ -36,6 +38,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun listeners() {
         binding.imageButtonAdd.setOnClickListener(this)
+        binding.editNewTask.setOnEditorActionListener { _, actionId, _ ->
+            return@setOnEditorActionListener when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    handleAddTask()
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun handleList() {
@@ -64,7 +75,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         tasks.add(task)
         adapter.notifyDataSetChanged()
 
+        binding.editNewTask.text.clear()
         binding.textTasksCreatedValue.text = tasks.size.toString()
+
+        val keyboardService = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        keyboardService.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
     }
 
     private fun handleRemove(item: TaskBinding, position: Int) {
