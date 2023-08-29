@@ -2,6 +2,8 @@ package com.example.todolist
 
 import android.content.Context
 import android.graphics.Paint
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.ShapeDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -41,7 +43,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun listeners() {
         binding.imageButtonAdd.setOnClickListener(this)
-        binding.editNewTask.setOnEditorActionListener { _, actionId, _ ->
+
+        val editNewTask = binding.editNewTask
+
+        editNewTask.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
                     handleAddTask()
@@ -67,7 +72,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun handleAddTask() {
-        val description = binding.editNewTask.text.toString()
+        val editNewTask = binding.editNewTask
+        val description = editNewTask.text.toString()
 
         if (description.isEmpty()) {
             Toast.makeText(this, "Preencha o campo", Toast.LENGTH_SHORT).show()
@@ -79,11 +85,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         tasks.add(task)
         adapter.notifyDataSetChanged()
 
-        binding.editNewTask.text.clear()
-        binding.textTasksCreatedValue.text = tasks.size.toString()
-
         val keyboardService = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         keyboardService.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+
+        editNewTask.text.clear()
+        editNewTask.clearFocus()
+        binding.textTasksCreatedValue.text = tasks.size.toString()
     }
 
     private fun handleRemove(item: TaskBinding, position: Int) {
@@ -109,8 +116,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         val backgroundDrawable = ContextCompat.getDrawable(this, R.drawable.task_item_container)
         backgroundDrawable?.mutate()
-
-        Log.i("Teste", "Tasks edit: $tasks")
 
         if (checkBox.isChecked) {
             backgroundDrawable?.setTint(ContextCompat.getColor(this, R.color.gray_500))
