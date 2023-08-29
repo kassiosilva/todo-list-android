@@ -71,6 +71,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         // adapter.registerAdapterDataObserver(emptyObserver)
     }
 
+    private fun handleTasksCompleted() {
+        val tasksCompleted = tasks.filter { it.isCompleted }.size
+
+        binding.textCompletedTasksValue.text = tasksCompleted.toString()
+    }
+
     private fun handleAddTask() {
         val editNewTask = binding.editNewTask
         val description = editNewTask.text.toString()
@@ -100,6 +106,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding.textTasksCreatedValue.text = tasks.size.toString()
 
         if (item.checkboxTask.isChecked) {
+            handleTasksCompleted()
+
             item.checkboxTask.paintFlags =
                 item.checkboxTask.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             item.checkboxTask.setTextColor(ContextCompat.getColor(this, R.color.gray_100))
@@ -113,6 +121,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val checkBox = item.checkboxTask
 
         tasks[position].isCompleted = checkBox.isChecked
+
+        handleTasksCompleted()
 
         val backgroundDrawable = ContextCompat.getDrawable(this, R.drawable.task_item_container)
         backgroundDrawable?.mutate()
