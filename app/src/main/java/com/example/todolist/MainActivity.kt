@@ -1,14 +1,17 @@
 package com.example.todolist
 
 import android.content.Context
+import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.databinding.ActivityMainBinding
@@ -44,6 +47,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     handleAddTask()
                     true
                 }
+
                 else -> false
             }
         }
@@ -87,6 +91,40 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         adapter.notifyItemRemoved(position)
 
         binding.textTasksCreatedValue.text = tasks.size.toString()
+
+        if (item.checkboxTask.isChecked) {
+            item.checkboxTask.paintFlags =
+                item.checkboxTask.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+            item.checkboxTask.setTextColor(ContextCompat.getColor(this, R.color.gray_100))
+
+            val backgroundDrawable = ContextCompat.getDrawable(this, R.drawable.task_item_container)
+            item.root.background = backgroundDrawable?.mutate()
+        }
+    }
+
+    private fun handleChecked(item: TaskBinding, position: Int) {
+        val checkBox = item.checkboxTask
+
+        tasks[position].isCompleted = checkBox.isChecked
+
+        val backgroundDrawable = ContextCompat.getDrawable(this, R.drawable.task_item_container)
+        backgroundDrawable?.mutate()
+
+        Log.i("Teste", "Tasks edit: $tasks")
+
+        if (checkBox.isChecked) {
+            backgroundDrawable?.setTint(ContextCompat.getColor(this, R.color.gray_500))
+
+            item.root.background = backgroundDrawable
+            checkBox.paintFlags = checkBox.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG;
+            checkBox.setTextColor(ContextCompat.getColor(this, R.color.gray_300))
+
+            return
+        }
+
+        item.root.background = backgroundDrawable
+        checkBox.paintFlags = checkBox.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+        checkBox.setTextColor(ContextCompat.getColor(this, R.color.gray_100))
     }
 
     private inner class TasksAdapter(
@@ -109,12 +147,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         inner class TaskViewHolder(private val bind: TaskBinding) :
             RecyclerView.ViewHolder(bind.root) {
+
             fun bind(task: Task) {
-                bind.checkboxTask.text = task.description
-                bind.checkboxTask.isChecked = task.isCompleted
+                val checkboxTask = bind.checkboxTask
+
+                checkboxTask.text = task.description
+                checkboxTask.isChecked = task.isCompleted
 
                 bind.imageButtonDelete.setOnClickListener {
                     handleRemove(bind, adapterPosition)
+                }
+
+                checkboxTask.setOnClickListener {
+                    handleChecked(bind, adapterPosition)
                 }
             }
         }
